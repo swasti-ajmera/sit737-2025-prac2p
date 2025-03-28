@@ -1,5 +1,3 @@
-Below is the documentation in Markdown format:
-
 # Step-by-Step Documentation for Setting Up the Node.js and Express Calculator API
 
 This guide provides a detailed explanation of how to set up a **Node.js** and **Express.js** application that performs basic arithmetic operations (addition, subtraction, multiplication, and division). The application also includes logging using **Winston** to track requests and errors.
