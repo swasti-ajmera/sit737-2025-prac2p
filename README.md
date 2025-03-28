@@ -16,7 +16,7 @@ Before starting, ensure that you have **Node.js** installed on your system.
     ```sh
     node -v
     ```
-   If installed, it will return a version number (e.g., `v18.16.0`).
+   If installed, it will return a version number.
 
 3. Check if npm (Node Package Manager) is installed:
     ```sh
@@ -24,20 +24,11 @@ Before starting, ensure that you have **Node.js** installed on your system.
     ```
    This should return the npm version number.
 
-### Installing Node.js (if not installed)
-- Download and install Node.js from the official website: [Download Node.js](https://nodejs.org/).
-- It is recommended to install the **LTS (Long-Term Support) version** for better stability.
-
 ---
 
 ## Step 2: Set Up the Project
 
 1. Create a new directory for your project:
-    ```sh
-    mkdir calculator-api
-    cd calculator-api
-    ```
-
 2. Initialize a new Node.js project:
     ```sh
     npm init -y
@@ -63,10 +54,6 @@ Before starting, ensure that you have **Node.js** installed on your system.
 ## Step 4: Create the Main JavaScript File
 
 1. Inside the `calculator-api` directory, create a file named `calculator.js`:
-    ```sh
-    touch calculator.js
-    ```
-   *(Windows users can use Notepad or another text editor to create the file.)*
 
 ---
 
@@ -132,10 +119,10 @@ The Express application defines four routes to handle arithmetic operations:
     ```
    You should see a message such as:
     ```
-    Server running on port 3040
+    Server running on port 3000
     ```
 
-2. Use your web browser or an API testing tool like **Postman** to test the API endpoints.
+2. Use your web browser or an API testing tool like Postman to test the API endpoints.
 
 ---
 
@@ -216,6 +203,3 @@ Here are some examples to test the endpoints:
 ## Conclusion
 
 You have successfully set up a **Node.js and Express API** that performs basic arithmetic operations. The application is designed with logging using **Winston** to monitor operations and errors. Enjoy building and expanding on this foundation!
-```
-
-You can copy this Markdown content into a `.md` file and use it as your documentation.
