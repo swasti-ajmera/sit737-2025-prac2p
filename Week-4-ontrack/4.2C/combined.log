@@ -1,0 +1,8 @@
+{"level":"info","message":"Parameters 3 and 2 received for exponentiation","service":"calculator-service"}
+{"level":"error","message":"n2 is incorrectly defined","service":"calculator-service"}
+{"level":"error","message":"n2 is incorrectly defined","service":"calculator-service"}
+{"level":"info","message":"Parameter 9 is received for square root operation","service":"calculator-service"}
+{"level":"info","message":"Parameter 3 is received for square root operation","service":"calculator-service"}
+{"level":"info","message":"Parameters 3 and 1 received for modulo operation","service":"calculator-service"}
+{"level":"info","message":"Parameters 3 and 2 received for modulo operation","service":"calculator-service"}
+{"level":"error","message":"n2 cannot be 0","service":"calculator-service"}
