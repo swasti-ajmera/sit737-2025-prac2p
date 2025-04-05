@@ -1,162 +1,114 @@
-# 🚀 Dockerizing a Node.js Web Application
 
-This project demonstrates how to Dockerize a Node.js web application using a `Dockerfile` and `docker-compose.yml`, including setting up a container health check, exposing ports, and pushing the image to Docker Hub.
+## Publishing the Microservice into the Cloud  
+
+### 📦 Project Overview
+This project demonstrates the Dockerization of a Node.js microservice and its deployment to a **private container registry** on **Google Cloud Platform (GCP)** using **Artifact Registry**.
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```
-docker-project/
-│
+.
 ├── Dockerfile
 ├── docker-compose.yml
+├── server.js
 ├── package.json
-├── server.js         # Entry point of the Node.js app
-└── README.md
+├── package-lock.json
+├── README.md
 ```
 
 ---
 
-## 🧰 Requirements
+## ✅ Prerequisites
 
-Install the following tools before proceeding:
-
-- [Git](https://git-scm.com/)
-- [Visual Studio Code](https://code.visualstudio.com/)
 - [Node.js](https://nodejs.org/en/download/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Docker](https://www.docker.com/)
+- [Git](https://git-scm.com/)
+- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install)
+- A Google Cloud account with billing enabled and a project created
 
 ---
 
-## 🔧 Setup Instructions
+## 🔨 Step-by-Step Instructions
 
-### 1. Clone this Repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/swasti-ajmera/SIT707.git
-cd Week-5/docker-project
+git clone https://github.com/swasti-ajmera/sit737-2025-prac2p.git
+cd sit737-2025-prac2p
 ```
 
 ---
 
-### 2. Dockerfile
+### 2. Dockerize the Microservice
 
-The Dockerfile contains the instructions to build a Docker image:
+Create a `Dockerfile` with the following contents:
 
 ```Dockerfile
+# Base image
 FROM node:18
 
-WORKDIR /app
+# Set working directory
+WORKDIR /usr/src/app
 
+# Copy files
 COPY package*.json ./
 RUN npm install
-
 COPY . .
 
-# Install curl for health checks
-RUN apt-get update && apt-get install -y curl
-
+# Expose port
 EXPOSE 3000
-CMD ["npm", "start"]
+
+# Start the app
+CMD ["node", "server.js"]
 ```
 
 ---
 
-### 3. Docker Compose
+### 3. Build the Docker Image
 
-The `docker-compose.yml` sets up the application container with a health check:
-
-```yaml
-version: "3.8"
-
-services:
-  web:
-    build: .
-    ports:
-      - "3000:3000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: always
+```bash
+docker build -t docker-project-web .
 ```
 
 ---
 
-### 4. Build and Run
-
-Build the image:
+### 4. Tag the Docker Image for the Registry
 
 ```bash
-docker-compose build
-```
-
-Start the container:
-
-```bash
-docker-compose up
-```
-
-Access the app at: [http://localhost:3000](http://localhost:3000)
-
----
-
-### 5. Verify Container Health
-
-List running containers:
-
-```bash
-docker ps
-```
-
-Check health status:
-
-```bash
-docker inspect --format="{{json .State.Health}}" docker-project-web-1
-```
-
-You should see a response like:
-
-```json
-{
-  "Status": "healthy",
-  "FailingStreak": 0,
-  "Log": [...]
-}
+docker tag docker-project-web australia-southeast2-docker.pkg.dev/sit737-455910/docker-project/docker-project-web
 ```
 
 ---
 
-### 6. Push Docker Image to Docker Hub
-
-#### Tag the Image
+### 5. Authenticate Docker with Artifact Registry
 
 ```bash
-docker tag docker-project swastiajmera/docker-project-web
-```
-
-#### Login and Push
-
-```bash
-docker login
-docker push swastiajmera/docker-project-web
+gcloud auth configure-docker australia-southeast2-docker.pkg.dev
 ```
 
 ---
 
-### 7. Repository and Submission
+### 6. Push the Image to Artifact Registry
 
-- ✅ All code and configurations pushed to GitHub.
-- ✅ Docker image published on Docker Hub.
-- ✅ Health check implemented.
-- ✅ Application verified and running.
+```bash
+docker push australia-southeast2-docker.pkg.dev/sit737-455910/docker-project/docker-project-web
+```
+
+---
+
+### 7. Run the Image from the Registry (Verify Deployment)
+
+```bash
+docker run -d -p 3000:3000 australia-southeast2-docker.pkg.dev/sit737-455910/docker-project/docker-project-web
+```
+
+Then open `http://localhost:3000` to verify your service is running.
 
 ---
 
 ## 👨‍💻 Author
 
-**Swasti Ajmera**  
-SIT737 - Cloud Native Application Development  
-Deakin University, 2025
+**Name:** Your Name  
+**Student ID:** s224891586  
