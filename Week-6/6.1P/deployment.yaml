@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
         - name: nodejs-container
-          image: swastiajmera/6.1p-node-app:latest
+          image: 6.1p-node-app:v2
+          imagePullPolicy: Never
           ports:
             - containerPort: 3000

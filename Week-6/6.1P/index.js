@@ -1,7 +1,8 @@
 const http = require('http');
 
 const server = http.createServer((req, res) => {
-  res.end('Hello from Kubernetes Node.js App!');
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello from the UPDATED Kubernetes Node.js App!');
 });
 
 server.listen(3000, () => {
