@@ -1,114 +1,182 @@
-
-## Publishing the Microservice into the Cloud  
-
-### 📦 Project Overview
-This project demonstrates the Dockerization of a Node.js microservice and its deployment to a **private container registry** on **Google Cloud Platform (GCP)** using **Artifact Registry**.
+# SIT737 - Practical Task 6P  
+## Deploying a Node.js App on Kubernetes
 
 ---
 
-## 📁 Repository Structure
+## Project Structure
 
 ```
-.
+6.1P/
 ├── Dockerfile
-├── docker-compose.yml
-├── server.js
+├── index.js
 ├── package.json
-├── package-lock.json
-├── README.md
+├── deployment.yaml
+├── service.yaml
+└── README.md
 ```
 
 ---
 
-## ✅ Prerequisites
+## Prerequisites
+
+Make sure the following tools are installed and configured:
 
 - [Node.js](https://nodejs.org/en/download/)
-- [Docker](https://www.docker.com/)
-- [Git](https://git-scm.com/)
-- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install)
-- A Google Cloud account with billing enabled and a project created
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (with Kubernetes enabled)
+- [Git](https://git-scm.com/downloads)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
 
 ---
 
-## 🔨 Step-by-Step Instructions
+## Application Details
 
-### 1. Clone the Repository
+A basic Express-based Node.js application is created to return a simple message at the root endpoint:
 
-```bash
-git clone https://github.com/swasti-ajmera/sit737-2025-prac2p.git
-cd sit737-2025-prac2p
+**index.js**
+```js
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello from Kubernetes Node.js App!');
+});
+
+app.listen(PORT, () => {
+  console.log(`App is running on port ${PORT}`);
+});
 ```
 
 ---
 
-### 2. Dockerize the Microservice
+## Docker Setup
 
-Create a `Dockerfile` with the following contents:
+### 1. Dockerfile
 
-```Dockerfile
-# Base image
+This Dockerfile defines how the app is containerized:
+
+```dockerfile
 FROM node:18
 
-# Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy files
 COPY package*.json ./
 RUN npm install
+
 COPY . .
 
-# Expose port
 EXPOSE 3000
 
-# Start the app
-CMD ["node", "server.js"]
+CMD ["node", "index.js"]
 ```
 
----
-
-### 3. Build the Docker Image
+### 2. Build Docker Image
 
 ```bash
-docker build -t docker-project-web .
+docker build -t 6.1p-node-app .
 ```
 
 ---
 
-### 4. Tag the Docker Image for the Registry
+## Kubernetes Deployment
+
+### 1. Deployment Configuration
+
+**deployment.yaml**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs
+  template:
+    metadata:
+      labels:
+        app: nodejs
+    spec:
+      containers:
+        - name: nodejs
+          image: node-kube-app
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+```
+
+> `imagePullPolicy: Never` ensures Kubernetes uses the local image built with Docker.
+
+### 2. Apply Deployment
 
 ```bash
-docker tag docker-project-web australia-southeast2-docker.pkg.dev/sit737-455910/docker-project/docker-project-web
+kubectl apply -f deployment.yaml
 ```
 
 ---
 
-### 5. Authenticate Docker with Artifact Registry
+## Kubernetes Service
+
+### 1. Service Configuration
+
+**service.yaml**
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-service
+spec:
+  type: NodePort
+  selector:
+    app: nodejs
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30080
+```
+
+### 2. Apply Service
 
 ```bash
-gcloud auth configure-docker australia-southeast2-docker.pkg.dev
+kubectl apply -f service.yaml
 ```
 
----
+### 3. Verify Setup
 
-### 6. Push the Image to Artifact Registry
+Check pod and service status:
 
 ```bash
-docker push australia-southeast2-docker.pkg.dev/sit737-455910/docker-project/docker-project-web
+kubectl get pods
+kubectl get services
+```
+
+You should see:
+
+```
+NAME             TYPE       CLUSTER-IP      PORT(S)           AGE
+nodejs-service   NodePort   10.X.X.X        3000:30080/TCP     Xm
 ```
 
 ---
 
-### 7. Run the Image from the Registry (Verify Deployment)
+## Access the Application
 
-```bash
-docker run -d -p 3000:3000 australia-southeast2-docker.pkg.dev/sit737-455910/docker-project/docker-project-web
+Now open your browser and navigate to:
+
+```
+http://localhost:30080
 ```
 
-Then open `http://localhost:3000` to verify your service is running.
+You should see:
+```
+Hello from Kubernetes Node.js App!
+```
 
 ---
 
-## 👨‍💻 Author
+## Author
 
-**Name:** Your Name  
-**Student ID:** s224891586  
+- **Swasti Ajmera**
+- **Student ID:** 224891586 
+- **Unit:** SIT737 – Cloud Native Application Development
