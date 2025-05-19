@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-week10-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-week10
+  template:
+    metadata:
+      labels:
+        app: cloud-week10
+    spec:
+      containers:
+      - name: cloud-week10-container
+        image: australia-southeast1-docker.pkg.dev/task10-1p-460309/node-app-repo/cloud-week10-image:latest
+        ports:
+        - containerPort: 3000
